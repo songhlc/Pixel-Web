@@ -6,21 +6,19 @@ import * as data from '../../assets/debug-data/getData'
 
 export const getHomeTimeline = (page, okCallback, errorCallback) => {
 
-    if (DEBUG) {
-        setTimeout(function () {
-            okCallback(data.hometimeline)
-        }, 1500)
-        return
-    }
+    // if (DEBUG) {
+    //     setTimeout(function () {
+    //         okCallback(data.hometimeline)
+    //     }, 1500)
+    //     return
+    // }
 
     const accesstoken = store.getters.token.access_token
 
     var request_data = {
-        access_token: accesstoken,
-        count: 30,
-        page: page
+		pageNum: page.pageIndex,
+		pageSize: page.pageSize
     }
-
     var config = {
         method: 'get',
         url: API_ROUTER_CONFIG.home_timeline,
@@ -34,7 +32,12 @@ export const getHomeTimeline = (page, okCallback, errorCallback) => {
     axios(config)
         .then(function (response) {
             logger("oauthPost-ok", 'getHomeTimeline response succeed')
-            okCallback(response.data)
+			if (response.data.status == 1) {
+				okCallback(response.data.data)
+			} else {
+				errorCallback(response.data.msg)
+			}
+
         })
         .catch(function (error) {
             console.log(error);

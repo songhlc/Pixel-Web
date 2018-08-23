@@ -17,21 +17,59 @@
         <div id="comment">
             <div class="content-comment">
                 <div class="commentlist" v-for="comment in list">
-                    <pixel-comment :comment="comment"></pixel-comment>
+                    <pixel-comment :comment="comment" v-model="replycomment"></pixel-comment>
                 </div>
                 <div class="refresh-footer" v-if="option.refresh">
                     <pixel-spinner :size="'45px'" :color="'#007AFF'"></pixel-spinner>
                 </div>
             </div>
         </div>
+		<div class="comment-btns">
+			<div class="btn-oper">转发</div>
+			<div class="btn-oper" @click="handleComment">评论</div>
+			<div class="btn-oper">赞</div>
+		</div>
+		<div class="comment-handle" v-show="iscomment" v-clickoutside="handleClickOutside">
+			<textarea ref='commenttext' class="comment-textarea" placeholder="写评论" name="" id="" rows="10" v-model="comment"></textarea>
+			<div class="comment-send" @click="handleSend">发送</div>
+		</div>
     </div>
 </template>
- 
+
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import * as StringUtils from '../utils/string-utils'
+import Vue from 'vue'
+Vue.directive('clickoutside', {
+  bind (el, binding, vnode) {
+	function documentHandler (e) {
+		if (el.contains(e.target)) {
+			return false;
+		}
+		if (binding.expression) {
+			binding.value(e);
+		}
+	}
+	el.__vueClickOutside__ = documentHandler;
+	document.addEventListener('click', documentHandler);
+  },
+  update () {
+  },
+  unbind (el, binding) {
+	document.removeEventListener('click', el.__vueClickOutside__);
+	delete el.__vueClickOutside__;
+  }
+})
 export default {
     name: "detail-content",
+	data () {
+      return {
+        list: [],
+	  	iscomment: false,
+	  	comment: '',
+	  	replycomment: false
+	  }
+	},
     computed: {
         ...mapGetters({
             detail_content: 'detail_content',
@@ -40,6 +78,9 @@ export default {
         })
     },
     watch: {
+		replycomment: function (val, oldVal) {
+		    this.iscomment = val
+		},
         option: {
             handler: function (val, oldVal) {
                 if (val && val.page == 1) {
@@ -69,6 +110,27 @@ export default {
         ...mapActions([
             'getContentComments'
         ]),
+		handleSend (events) {
+          // 这里需要根据 replycomment 的值来判断是回复发布的寻源还是回复某一条评论
+			// 发送成功之后需要把值恢复成false
+			alert('发送成功')
+			this.replycomment = false
+			this.comment = ''
+		},
+		handleComment (events) {
+          this.iscomment = true
+			setTimeout(function () {
+			  this.$refs.commenttext.focus()
+			}.bind(this), 200)
+			events.stopPropagation()
+			return false
+		},
+		handleClickOutside () {
+          if (this.iscomment) {
+		  	this.iscomment = false
+		  	this.replycomment = false
+		  }
+		},
         goBack() {
             this.$router.go(-1)
         },
@@ -100,7 +162,7 @@ export default {
     }
 }
 </script>
- 
+
 <style lang="css">
 .detail {
     width: 100%;
@@ -178,5 +240,43 @@ export default {
     margin-bottom: .8rem;
     margin-top: .8rem;
     text-align: center;
+}
+.comment-btns{
+	position: fixed;
+	width: 100%;
+	bottom: 0;
+	height: 3.2rem;
+	background: #FFF;
+	display: table;
+	border-top: solid 0.05rem #eee;
+}
+.comment-handle{
+	position: fixed;
+	width: 100%;
+	bottom: 0;
+	height: 6.4rem;
+	background: #efefef;
+	border-top: solid 0.05rem #eee;
+}
+.comment-btns .btn-oper{
+	display: table-cell;
+	text-align: center;
+	width: 33%;
+	line-height: 3.2rem;
+}
+.comment-textarea{
+	margin: .5rem;
+	border: solid 0.05rem #eee;
+	height: 5.3rem;
+	width: 75%;
+}
+.comment-send{
+	width: 20%;
+	display: inline-block;
+	position: relative;
+	top: -2.5rem;
+	text-align: center;
+	line-height: 3rem;
+	color: #666;
 }
 </style>

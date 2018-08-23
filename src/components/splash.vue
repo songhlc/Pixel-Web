@@ -2,39 +2,22 @@
     <div class="splash">
         <div class="info">
             <div class="info-content">
-                <h3 class="project-name" >Pixel-Web</h3>
+                <h3 class="project-name" >社交化寻源应用</h3>
                 <div class="project-desc">
-                    <p>有时候啊 你总是在追赶前面的人</p>
-                    <p>总是抱怨自己为什么不能再努力一点</p>
-                    <p>累了你可以停下来 看看原来的自己</p>
-                    <p>其实你已经很了不起了</p>
-                    <p>这是我的第一个 Vue 项目</p>
-                    <p>感谢帮助过我的人</p>
+                    <p>友云采</p>
+                    <p>让采购交易更简单</p>
                 </div>
                 <div class="logining " :class="loginState?'show': ''">
                     <pixel-spinner :size="'45px'" :color="'#007AFF'"></pixel-spinner>
                 </div>
             </div>
             <button class="login" v-on:click="oauth">登录</button>
-            <div class="info-footer">
-                <div class="header">
-                    <img class="avatar"   src="../assets/icon.png">
-                </div>
-                <div class="wanbo">
-                    <h2 class="name" >wanbo</h2>
-                    <span class="desc">前面右转的第二排架子上就有啊</span>
-                </div>
-                <div class="follower">
-                    <img v-on:click="goMyGithub" class="avatar"   src="../assets/github.png">
-                    <img v-on:click="goMyWeibo"  class="avatar"   src="../assets/weibo.png">
-                </div>
-            </div>
         </div>
         <div id="particles-js"></div>
     </div>
-      
+
 </template>
- 
+
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import { HOST_CONCIG, KEY_CONFIG, DEBUG } from '../api/config/api-config'
@@ -91,16 +74,13 @@ export default {
             if (DEBUG) {
                 vue.goMain()
             } else {
-                var client_id = KEY_CONFIG.app_key;
-                var redirect_uri = KEY_CONFIG.redirect_uri;
-                var oauthUrl = HOST_CONCIG.oauth;
-                window.open(oauthUrl + '?client_id=' + client_id + '&redirect_uri=' + redirect_uri, "_self", "", true);
+                window.location.href = '/yuncai/mobile/login.html?r=/main/home'
             }
         },
         goMain() {
             let vue = this
             setTimeout(function () {
-                vue.$router.replace({ name: 'main' });
+				window.location.href = '/yuncai/mobile/login.html?r=/main/home'
             }, 2000)
         },
         goMyWeibo() {
@@ -224,7 +204,7 @@ export default {
     }
 }
 </script>
- 
+
 <style lang="css">
 .splash {
     width: 100%;

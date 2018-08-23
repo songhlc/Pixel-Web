@@ -1,29 +1,39 @@
 <template lang="html">
-    <div class="comment">
-            <div class="comment-header">
-                <img class="comment-header-avatar"  v-if="comment.user" :src="comment.user.avatar_large">
-            </div>
-            <div class="comment-content">
-                <div class="comment-user">
-                    <h3 class="user-name" v-if="comment.user">{{comment.user.name}}</h3>
-                    <span class="user-time">{{formatTime(comment.created_at)}}</span>
-                </div>
-                <div class="comment-text">
-                     <span class="content-text" v-html="formatContent(comment.text)"></span>
-                </div>
-            </div>
-        </div>
+	<div>
+		<div class="comment">
+			<div class="comment-header">
+				<img class="comment-header-avatar"  v-if="comment.user" :src="comment.user.avatar_large">
+			</div>
+			<div class="comment-content">
+				<div class="comment-user">
+					<h3 class="user-name" v-if="comment.user">{{comment.user.name}}</h3>
+					<span class="user-time">{{formatTime(comment.created_at)}}</span>
+				</div>
+				<div class="comment-text">
+					 <span class="content-text" v-html="formatContent(comment.text)"></span>
+				</div>
+			</div>
+		</div>
+		<div class="comment-operation">
+			<span @click="handleComment">评论</span>
+		</div>
+	</div>
 </template>
- 
+
 <script>
 import * as DateUtils from '../../../utils/date-utils'
 import * as StringUtils from '../../../utils/string-utils'
 
 export default {
     name: "pixel-comment",
-    props: [
-        'comment'
-    ],
+    props: {
+        'comment': null,
+		'replycomment': Boolean
+	},
+	model: {
+		prop: 'replycomment',
+		event: 'change'
+	},
     data() {
         return {
         };
@@ -35,10 +45,13 @@ export default {
         formatContent(content) {
             return StringUtils.formatContent(content)
         },
+		handleComment() {
+			this.$emit('change', true)
+		}
     }
 }
 </script>
- 
+
 <style lang="css">
 
 .comment {
@@ -48,7 +61,13 @@ export default {
     flex-flow: row;
     padding-bottom: 1rem;
     padding-right: 1rem;
-    border-bottom: 1px solid rgba(0, 0, 0, .03);
+}
+.comment-operation{
+	border-bottom: 1px solid rgba(0, 0, 0, .03);
+	text-align: right;
+	padding-right: 2rem;
+	font-size: 1rem;
+	color: #666;
 }
 
 .comment .comment-header {

@@ -8,14 +8,15 @@
         </div>
     </div>
 </template>
- 
+
 <script>
 import { mapActions, mapGetters } from 'vuex'
 export default {
     name: "home",
     data() {
         return {
-            list: []
+            list: [],
+			pageSize: 10
         };
     },
     computed: {
@@ -28,7 +29,7 @@ export default {
     watch: {
         option: {
             handler: function (val, oldVal) {
-                if (val && val.page == 1) {
+                if (val && val.page == 0) {
                     this.list = []
                 }
             },
@@ -36,7 +37,7 @@ export default {
         },
         statuses: function (val, oldVal) {
             if (val) {
-                if (this.option.page == 1) {
+                if (this.option.page == 0) {
                     this.list = val;
                 } else {
                     this.list = [...this.list, ...val]
@@ -45,7 +46,7 @@ export default {
         }
     },
     created() {
-        this.homeTimeline(1)
+        this.homeTimeline(0)
     },
     mounted() {
 
@@ -61,12 +62,12 @@ export default {
             'getHomeTimeline'
         ]),
         homeTimeline(page) {
-            this.getHomeTimeline(page)
+            this.getHomeTimeline({pageIndex: page, pageSize: this.pageSize})
         },
         loadMore() {
             let vue = this
             vue.option.refresh = true
-            var page = vue.option.page + 1
+            var page = vue.option.page
             vue.homeTimeline(page)
         },
         scrollBar() {
@@ -82,7 +83,7 @@ export default {
 
 }
 </script>
- 
+
 <style lang="css">
 .list {
     flex: 1;

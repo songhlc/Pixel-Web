@@ -6,13 +6,13 @@ const key_config = {
 
 const host_config = {
     local: 'http://192.168.1.104:8089/',
-    host: 'https://pixel-api.herokuapp.com/',
+    host: '',
     oauth: 'https://open.weibo.cn/oauth2/authorize',
 }
 
 const api_router_config = {
     oauth_post: '/oauth2/access_token',
-    home_timeline: '/statuses/home_timeline.json',
+    home_timeline: '/sourcing/busiopp/hit/page',
     public_timeline: '/statuses/public_timeline.json',
     my_content: '/statuses/user_timeline.json',
     userinfo: '/users/show.json',
@@ -30,4 +30,4 @@ const api_router_config = {
 export const HOST_CONCIG = host_config
 export const KEY_CONFIG = key_config
 export const API_ROUTER_CONFIG = api_router_config
-export const DEBUG = false
+export const DEBUG = true
